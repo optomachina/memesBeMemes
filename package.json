@@ -6,12 +6,13 @@
   "workspaces": [
     "sites/*"
   ],
+  "type": "module",
   "scripts": {
-    "dev:boffum": "cd sites/boffum && npx serve -p 3001",
-    "dev:moreyouknow": "cd sites/themoreyouknow && npx serve -p 3002",
-    "dev:pikachu": "cd sites/surprised-pikachu && npx serve -p 3003",
-    "dev": "npx concurrently \"npm run dev:boffum\" \"npm run dev:moreyouknow\" \"npm run dev:pikachu\"",
-    "build": "npm run build --workspaces"
+    "dev:boffum": "cd sites/boffum && (npx serve --listen 3001 & npx open-cli http://localhost:3001)",
+    "dev:moreyouknow": "cd sites/themoreyouknow && (npx serve --listen 3002 & npx open-cli http://localhost:3002)",
+    "dev:pikachu": "cd sites/surprised-pikachu && (npx serve --listen 3003 & npx open-cli http://localhost:3003)",
+    "dev": "bun concurrently \"bun run dev:boffum\" \"bun run dev:moreyouknow\" \"bun run dev:pikachu\"",
+    "build": "bun run build --workspace-root ."
   },
   "keywords": [
     "meme",
@@ -19,8 +20,11 @@
     "monorepo"
   ],
   "author": "",
-  "license": "MIT",
+  "license": "ISC",
   "devDependencies": {
-    "concurrently": "^8.2.2"
-  }
+    "concurrently": "^8.2.2",
+    "open-cli": "^7.2.0",
+    "serve": "^14.2.1"
+  },
+  "packageManager": "bun@1.0.20"
 }

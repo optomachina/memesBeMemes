@@ -1,13 +1,11 @@
 {
   "name": "boffum",
-  "version": "1.0.0",
   "private": true,
+  "version": "1.0.0",
+  "type": "module",
   "scripts": {
     "build": "echo 'No build step required'",
     "dev": "serve .",
     "start": "serve ."
-  },
-  "dependencies": {
-    "serve": "^14.2.1"
   }
 }
