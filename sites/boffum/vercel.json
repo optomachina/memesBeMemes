@@ -1,27 +1,14 @@
 {
   "version": 2,
-  "builds": [
+  "headers": [
     {
-      "src": "**/*",
-      "use": "@vercel/static"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/.*",
-      "headers": {
-        "cache-control": "s-maxage=1, stale-while-revalidate"
-      },
-      "continue": true
-    },
-    {
-      "handle": "filesystem"
-    }
-  ],
-  "domains": [
-    {
-      "domain": "boffum.vercel.app",
-      "customDomain": "boffum.com"
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
     }
   ]
 }
