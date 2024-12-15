@@ -17,5 +17,11 @@
     {
       "handle": "filesystem"
     }
+  ],
+  "domains": [
+    {
+      "domain": "boffum.vercel.app",
+      "customDomain": "boffum.com"
+    }
   ]
 }
