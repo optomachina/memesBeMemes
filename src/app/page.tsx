@@ -1,11 +1,24 @@
+import Image from 'next/image'
+
 export default function Home() {
   return (
-    <div className="relative w-screen h-screen overflow-hidden">
-      <img
-        src="/surprisedPikachu.jpg"
-        alt="Surprised Pikachu Meme"
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[50vh] w-auto object-contain"
-      />
-    </div>
+    <main className="min-h-[200vh]">
+      <div className="sticky top-0 w-full h-screen overflow-hidden bg-black flex items-center justify-center">
+        <div className="relative h-full aspect-auto">
+          <Image
+            src="/surprisedPikachu.jpg"
+            alt="Surprised Pikachu Meme"
+            fill
+            className="object-contain"
+            priority
+            sizes="100vw"
+            quality={100}
+          />
+        </div>
+      </div>
+      <div className="h-screen flex items-center justify-center">
+        <h1 className="text-4xl font-bold">2</h1>
+      </div>
+    </main>
   )
 }
