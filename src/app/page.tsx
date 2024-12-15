@@ -2,104 +2,53 @@
 
 import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
+import type { MouseEvent, TouchEvent } from 'react'
 
 export default function Home() {
   const [showTooltip, setShowTooltip] = useState(false)
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 })
-  const tooltipTimeoutRef = useRef<NodeJS.Timeout>()
-  const imageRef = useRef<HTMLImageElement>(null)
+  const tooltipTimeoutRef = useRef<ReturnType<typeof setTimeout>>(null)
 
-  const showTooltipAt = (x: number, y: number) => {
+  const showTooltipAt = (x: number, y: number, message: string = 'Copied!') => {
     setTooltipPosition({ x, y })
     setShowTooltip(true)
     if (tooltipTimeoutRef.current) clearTimeout(tooltipTimeoutRef.current)
     tooltipTimeoutRef.current = setTimeout(() => setShowTooltip(false), 2000)
   }
 
-  const copyImage = async (e: MouseEvent | TouchEvent) => {
-    if (!imageRef.current) return
-
-    const clientX = 'touches' in e ? e.touches[0].clientX : (e as MouseEvent).clientX
-    const clientY = 'touches' in e ? e.touches[0].clientY : (e as MouseEvent).clientY
-
+  const handleImageClick = async (e: MouseEvent<HTMLImageElement>) => {
     try {
-      const response = await fetch(imageRef.current.src)
-      const blob = await response.blob()
-      await navigator.clipboard.write([
-        new ClipboardItem({
-          [blob.type]: blob
-        })
-      ])
-      showTooltipAt(clientX, clientY)
+      await navigator.clipboard.writeText(window.location.href)
+      showTooltipAt(e.clientX, e.clientY)
     } catch (err) {
-      try {
-        const canvas = document.createElement('canvas')
-        canvas.width = imageRef.current.naturalWidth
-        canvas.height = imageRef.current.naturalHeight
-        const ctx = canvas.getContext('2d')
-        if (!ctx) throw new Error('Could not get canvas context')
-        ctx.drawImage(imageRef.current, 0, 0)
-        canvas.toBlob(async (blob) => {
-          if (!blob) return
-          try {
-            await navigator.clipboard.write([
-              new ClipboardItem({
-                [blob.type]: blob
-              })
-            ])
-            showTooltipAt(clientX, clientY)
-          } catch (err) {
-            navigator.clipboard.writeText(window.location.origin + imageRef.current!.src)
-              .then(() => showTooltipAt(clientX, clientY))
-          }
-        })
-      } catch (err) {
-        navigator.clipboard.writeText(window.location.origin + imageRef.current.src)
-          .then(() => showTooltipAt(clientX, clientY))
-      }
+      showTooltipAt(e.clientX, e.clientY, 'Failed to copy')
+      console.error('Failed to copy:', err)
     }
   }
 
-  useEffect(() => {
-    const image = imageRef.current
-    if (!image) return
-
-    let touchTimeout: NodeJS.Timeout
-
-    const handleTouchStart = (e: TouchEvent) => {
-      touchTimeout = setTimeout(() => {
-        copyImage(e)
-      }, 500)
+  const handleTouchStart = (e: TouchEvent<HTMLImageElement>) => {
+    const touch = e.touches[0]
+    try {
+      navigator.clipboard.writeText(window.location.href)
+      showTooltipAt(touch.clientX, touch.clientY)
+    } catch (err) {
+      showTooltipAt(touch.clientX, touch.clientY, 'Failed to copy')
+      console.error('Failed to copy:', err)
     }
-
-    const clearTouchTimeout = () => {
-      if (touchTimeout) clearTimeout(touchTimeout)
-    }
-
-    image.addEventListener('touchstart', handleTouchStart as any)
-    image.addEventListener('touchend', clearTouchTimeout)
-    image.addEventListener('touchmove', clearTouchTimeout)
-    document.addEventListener('click', copyImage as any)
-
-    return () => {
-      image.removeEventListener('touchstart', handleTouchStart as any)
-      image.removeEventListener('touchend', clearTouchTimeout)
-      image.removeEventListener('touchmove', clearTouchTimeout)
-      document.removeEventListener('click', copyImage as any)
-    }
-  }, [])
+  }
 
   return (
     <main>
       <div className="hero" id="top">
         <Image
-          ref={imageRef as any}
           src="/surprisedPikachu.jpg"
           alt=":o"
           fill
           className="object-contain"
           priority
           quality={100}
+          onClick={handleImageClick}
+          onTouchStart={handleTouchStart}
         />
         <div 
           className={`copy-tooltip ${showTooltip ? 'show' : ''}`}
