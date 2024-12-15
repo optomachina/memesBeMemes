@@ -1,5 +1,6 @@
 import './globals.css'
 import type { Metadata } from 'next'
+import { Navigation } from '@memes/ui'
 
 export const metadata: Metadata = {
   title: ':o',
@@ -45,10 +46,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <nav className="nav">
-          <a href="#top" style={{ color: '#000' }}>:o</a>
-          <a href="#shop">shop</a>
-        </nav>
+        <Navigation emoji=":o" />
         {children}
       </body>
     </html>
