@@ -1,10 +1,14 @@
 {
   "version": 2,
+  "outputDirectory": ".",
   "builds": [
     {
-      "src": "**",
+      "src": "*.{html,jpg,png}",
       "use": "@vercel/static"
     }
+  ],
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/$1" }
   ],
   "headers": [
     {
