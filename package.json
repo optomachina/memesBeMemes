@@ -7,9 +7,11 @@
     "sites/*"
   ],
   "scripts": {
-    "start:boffum": "cd sites/boffum && python3 -m http.server 8001",
-    "start:moreyouknow": "cd sites/themoreyouknow && python3 -m http.server 8002",
-    "start:pikachu": "cd sites/surprised-pikachu && python3 -m http.server 8003"
+    "dev:boffum": "cd sites/boffum && npx serve -p 3001",
+    "dev:moreyouknow": "cd sites/themoreyouknow && npx serve -p 3002",
+    "dev:pikachu": "cd sites/surprised-pikachu && npx serve -p 3003",
+    "dev": "npx concurrently \"npm run dev:boffum\" \"npm run dev:moreyouknow\" \"npm run dev:pikachu\"",
+    "build": "npm run build --workspaces"
   },
   "keywords": [
     "meme",
@@ -17,5 +19,8 @@
     "monorepo"
   ],
   "author": "",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
 }
